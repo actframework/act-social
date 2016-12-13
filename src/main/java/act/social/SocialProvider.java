@@ -8,10 +8,7 @@ import org.osgl.inject.annotation.MapKey;
 import org.osgl.inject.annotation.TypeOf;
 import org.osgl.logging.LogManager;
 import org.osgl.logging.Logger;
-import org.osgl.util.Codec;
-import org.osgl.util.E;
-import org.osgl.util.S;
-import org.osgl.util.StringValueResolver;
+import org.osgl.util.*;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,6 +40,8 @@ public abstract class SocialProvider {
      */
     protected AuthenticationMethod authMethod;
 
+    protected String callbackUrl;
+
     OkHttpClient http = new OkHttpClient();
 
     /**
@@ -55,6 +54,7 @@ public abstract class SocialProvider {
         this.id = id;
         this.authMethod = authMethod;
         this.config = Config.load(id);
+        this.callbackUrl = Act.app().router().reverseRoute("act.social.SocialLink.authCallback", C.<String, Object>map("provider", getId()), true);
     }
 
     public String getId() {
@@ -107,7 +107,7 @@ public abstract class SocialProvider {
     public abstract String authUrl();
 
     protected String callbackUrl() {
-        return Act.app().router().fullUrl("~social/callback?provider=%s", getId());
+        return callbackUrl;
     }
 
     protected String readUrlAsString(String url, Map<String, String> params, boolean post) {
