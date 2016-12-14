@@ -17,6 +17,10 @@ public class SocialId implements java.io.Serializable {
      */
     private String provider;
 
+    private SocialId() {
+        // for ORM usage
+    }
+
     public SocialId(String userId, String provider) {
         this.userId = userId;
         this.provider = provider;
