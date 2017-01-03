@@ -3,6 +3,7 @@ package act.social.provider;
 import act.social.SocialId;
 import act.social.SocialProfile;
 import com.alibaba.fastjson.JSONObject;
+import org.osgl.$;
 import org.osgl.util.C;
 import org.osgl.util.E;
 import org.osgl.util.S;
@@ -24,6 +25,26 @@ public class GoogleProvider extends OAuth2Provider {
     }
 
     @Override
+    protected boolean postToAccessTokenUrl() {
+        return true;
+    }
+
+    @Override
+    protected boolean accessTokenInJson() {
+        return true;
+    }
+
+    @Override
+    protected String expiresParamName() {
+        return "expires_in";
+    }
+
+    @Override
+    protected long parseExpires(String s) {
+        return $.ms() + Long.parseLong(s) * 1000 - 5 * 1000;
+    }
+
+    @Override
     public void fillProfile(SocialProfile user) {
         if (user.isTokenExpired()) {
             updateAccessToken(user);
@@ -31,22 +52,16 @@ public class GoogleProvider extends OAuth2Provider {
 
         String url = config.getProfileUrl();
         Map<String, String> params = C.map(
-                "fields", "emails%2Fvalue%2Cid%2Cimage%2Furl%2Cname(familyName%2CgivenName)",
+                "fields", "emails/value,id,image/url,name(familyName,givenName)",
                 authMethod.accessTokenParamName(), user.getToken()
         );
         JSONObject json = readUrlAsJson(url, params, false);
         user.setId(new SocialId(json.getString("id"), this.getId()));
-        user.setFirstName(json.getString("first_name"));
-        user.setLastName(json.getString("last_name"));
-        user.setEmail(json.getString("email"));
-
-        Object pic = json.get("picture");
-        if (pic instanceof JSONObject) {
-            user.setAvatarUrl(((JSONObject) pic).getJSONObject("data").getString("url"));
-        } else if (null != pic) {
-            user.setAvatarUrl(S.string(pic));
-        }
-
+        JSONObject name = json.getJSONObject("name");
+        user.setFirstName(name.getString("givenName"));
+        user.setLastName(name.getString("familyName"));
+        user.setEmail(json.getJSONArray("emails").getJSONObject(0).getString("value"));
+        user.setAvatarUrl(json.getJSONObject("image").getString("url"));
     }
 
     private void updateAccessToken(SocialProfile user) {

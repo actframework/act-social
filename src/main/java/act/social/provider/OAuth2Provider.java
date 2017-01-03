@@ -38,7 +38,7 @@ public abstract class OAuth2Provider extends SocialProvider {
     }
 
     protected Map<String, String> exchangeAccessTokenParams(String code) {
-        return C.map(
+        return C.newMap(
                 authMethod.keyParamName(), config.getKey(),
                 authMethod.secretParamName(), config.getSecret(),
                 authMethod.authCodeParamName(), code,
