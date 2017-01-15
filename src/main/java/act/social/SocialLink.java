@@ -4,10 +4,12 @@ import act.app.ActionContext;
 import act.app.conf.AutoConfig;
 import act.controller.Controller;
 import act.event.EventBus;
+import com.sun.org.apache.bcel.internal.classfile.Code;
 import org.osgl.$;
 import org.osgl.http.H;
 import org.osgl.mvc.annotation.Action;
 import org.osgl.mvc.result.Result;
+import org.osgl.util.Codec;
 import org.osgl.util.Const;
 import org.osgl.util.S;
 
@@ -16,7 +18,6 @@ import org.osgl.util.S;
 public class SocialLink extends Controller.Util {
 
     public static final Const<String> LOGIN_REDIRECT = $.constant();
-    public static final String KEY_ORIGINAL_CALLBACK = "~social_callback~";
 
     /**
      * Post to this endpoint to trigger the social authenticate process
@@ -25,13 +26,14 @@ public class SocialLink extends Controller.Util {
     public Result startSocialLink(
             SocialProvider provider,
             String callback,
-            ActionContext context
+            String payload,
+            ActionContext context,
+            H.Flash flash
     ) {
         if (null == callback) {
             callback = context.req().referrer();
         }
-        context.flash().put(KEY_ORIGINAL_CALLBACK, callback);
-        return redirect(provider.authUrl());
+        return redirect(provider.authUrl(callback, payload));
     }
 
     @Action(value = "callback", methods = {H.Method.GET, H.Method.POST})
@@ -39,15 +41,16 @@ public class SocialLink extends Controller.Util {
             SocialProvider provider,
             String code,
             String state,
-            ActionContext context,
+            String act_callback,
+            String act_payload,
             EventBus eventBus
     ) {
         provider.checkCsrfToken(state);
-        context.flash().keep(KEY_ORIGINAL_CALLBACK);
-        SocialProfile profile = provider.doAuth(code);
+        SocialProfile profile = provider.doAuth(code, act_callback, act_payload);
         // todo handle exception
-        eventBus.trigger(profile.createFetchedEvent());
-        String originalCallback = context.flash().get(KEY_ORIGINAL_CALLBACK);
+        String payload = act_payload;
+        eventBus.trigger(profile.createFetchedEvent(payload));
+        String originalCallback = act_callback;
         if (S.blank(originalCallback)) {
             originalCallback = LOGIN_REDIRECT.get();
         }

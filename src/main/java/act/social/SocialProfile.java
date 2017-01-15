@@ -1,7 +1,6 @@
 package act.social;
 
 import act.event.ActEvent;
-import act.event.On;
 import org.osgl.$;
 
 import java.io.Serializable;
@@ -170,13 +169,19 @@ public class SocialProfile implements Serializable {
         provider.fillProfile(this);
     }
 
-    public Fetched createFetchedEvent() {
-        return new Fetched(this);
+    public Fetched createFetchedEvent(String payload) {
+        return new Fetched(this, payload);
     }
 
     public static class Fetched extends ActEvent<SocialProfile> {
-        public Fetched(SocialProfile source) {
+        private String payload;
+        public Fetched(SocialProfile source, String payload) {
             super(source);
+            this.payload = payload;
+        }
+
+        public String payload() {
+            return payload;
         }
     }
 

@@ -1,6 +1,5 @@
 package act.social.provider;
 
-import act.app.ActionContext;
 import act.social.AuthenticationMethod;
 import act.social.SocialProfile;
 import act.social.SocialProvider;
@@ -27,31 +26,31 @@ public abstract class OAuth2Provider extends SocialProvider {
         return false;
     }
 
-    protected Map<String, String> authorizationParams() {
+    protected Map<String, String> authorizationParams(String callback, String payload) {
         return C.map(
                 authMethod.keyParamName(), config.getKey(),
-                authMethod.callBackUrlParamName(), callbackUrl(),
+                authMethod.callBackUrlParamName(), callbackUrl(callback, payload),
                 authMethod.scopeParamName(), config.getScope(),
                 authMethod.csrfTokenParamName(), createCsrfToken(),
                 "response_type", "code"
         );
     }
 
-    protected Map<String, String> exchangeAccessTokenParams(String code) {
+    protected Map<String, String> exchangeAccessTokenParams(String code, String act_callback, String act_payload) {
         return C.newMap(
                 authMethod.keyParamName(), config.getKey(),
                 authMethod.secretParamName(), config.getSecret(),
                 authMethod.authCodeParamName(), code,
-                authMethod.callBackUrlParamName(), callbackUrl(),
+                authMethod.callBackUrlParamName(), callbackUrl(act_callback, act_payload),
                 "grant_type", "authorization_code"
         );
     }
 
     @Override
-    public String authUrl() {
+    public String authUrl(String callback, String payload) {
         String url = config.getAuthUrl();
         StringBuilder sb = S.builder(url);
-        appendParams(sb, authorizationParams());
+        appendParams(sb, authorizationParams(callback, payload));
         return sb.toString();
     }
 
@@ -98,11 +97,11 @@ public abstract class OAuth2Provider extends SocialProvider {
     }
 
     @Override
-    public SocialProfile doAuth(String code) {
+    public SocialProfile doAuth(String code, String act_callback, String act_payload) {
         String accessToken = null;
         long expires = -1;
         if (!accessTokenInJson()) {
-            String result = readUrlAsString(config.getAccessTokenUrl(), exchangeAccessTokenParams(code), postToAccessTokenUrl());
+            String result = readUrlAsString(config.getAccessTokenUrl(), exchangeAccessTokenParams(code, act_callback, act_payload), postToAccessTokenUrl());
             String[] pairs = result.split("&");
             for (String pair : pairs) {
                 String[] kv = pair.split("=");
@@ -117,7 +116,7 @@ public abstract class OAuth2Provider extends SocialProvider {
                 }
             }
         } else {
-            JSONObject result = readUrlAsJson(config.getAccessTokenUrl(), exchangeAccessTokenParams(code), postToAccessTokenUrl());
+            JSONObject result = readUrlAsJson(config.getAccessTokenUrl(), exchangeAccessTokenParams(code, act_callback, act_payload), postToAccessTokenUrl());
             accessToken = result.getString("access_token");
             expires = parseExpires(result.getString(expiresParamName()));
         }

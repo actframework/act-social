@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONObject;
 import org.osgl.$;
 import org.osgl.util.C;
 import org.osgl.util.E;
-import org.osgl.util.S;
 
 import java.util.Map;
 
@@ -18,8 +17,8 @@ public class GoogleProvider extends OAuth2Provider {
     }
 
     @Override
-    protected Map<String, String> exchangeAccessTokenParams(String code) {
-        Map<String, String> params = super.exchangeAccessTokenParams(code);
+    protected Map<String, String> exchangeAccessTokenParams(String code, String act_callback, String act_payload) {
+        Map<String, String> params = super.exchangeAccessTokenParams(code, act_callback, act_payload);
         params.put("grant_type", "authorization_code");
         return params;
     }

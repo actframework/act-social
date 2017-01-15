@@ -3,7 +3,10 @@ package act.social;
 import act.Act;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import okhttp3.*;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.osgl.inject.annotation.MapKey;
 import org.osgl.inject.annotation.TypeOf;
 import org.osgl.logging.LogManager;
@@ -13,7 +16,6 @@ import org.osgl.util.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -73,10 +75,12 @@ public abstract class SocialProvider {
     /**
      * Subclasses must implement the authentication logic in this method
      *
+     * @param act_callback the url to which the user is redirected once social authentication process finished
+     * @param act_payload the addtional data app would like to pass through the social authentication process
      * @param code the auth code
      * @return SocialProfile the authenticated user
      */
-    public abstract SocialProfile doAuth(String code);
+    public abstract SocialProfile doAuth(String code, String act_callback, String act_payload);
 
     protected static StringBuilder appendParam(StringBuilder sb, String key, String val) {
         String sep = sb.toString().contains("?") ? "&" : "?";
@@ -102,9 +106,22 @@ public abstract class SocialProvider {
 
     /**
      * Returns the authentication URL of this provider
+     * @param callback the callback URL to which user is redirected once social authentication process is done
+     * @param payload the additional data user app might want to passed through the social link process
      * @return the authentication URL
      */
-    public abstract String authUrl();
+    public abstract String authUrl(String callback, String payload);
+
+    protected String callbackUrl(String callback, String payload) {
+        StringBuilder sb = new StringBuilder(callbackUrl);
+        if (S.notBlank(callback)) {
+            sb.append("&act_callback=").append(Codec.encodeUrl(callback));
+        }
+        if (S.notBlank(payload)) {
+            sb.append("&act_payload=").append(Codec.encodeUrl(payload));
+        }
+        return sb.toString();
+    }
 
     protected String callbackUrl() {
         return callbackUrl;

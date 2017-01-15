@@ -1,22 +1,12 @@
 package act.social.provider;
 
-import act.app.ActionContext;
-import act.social.AuthenticationMethod;
 import act.social.SocialId;
 import act.social.SocialProfile;
-import act.social.SocialProvider;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.osgl.$;
-import org.osgl.exception.UnexpectedException;
 import org.osgl.util.C;
 import org.osgl.util.E;
 import org.osgl.util.S;
 
-import java.io.IOException;
 import java.util.Map;
 
 public class FacebookProvider extends OAuth2Provider {
