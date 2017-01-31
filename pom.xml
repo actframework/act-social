@@ -39,6 +39,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <git.url>git@github.com:actframework/act-social-link.git</git.url>
+    <act.version>0.3.1-SNAPSHOT</act.version>
   </properties>
 
   <parent>
@@ -106,7 +107,7 @@
     <dependency>
       <groupId>org.actframework</groupId>
       <artifactId>act</artifactId>
-      <version>0.3.0-SNAPSHOT</version>
+      <version>${act.version}</version>
       <scope>provided</scope>
     </dependency>
 
