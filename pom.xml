@@ -18,6 +18,8 @@
 ********************************************
 *            version history
 ********************************************
+0.6.0
+  - update to act-0.6.0
 0.5.0
   - update to act-0.5.0
 0.1.0
@@ -33,7 +35,7 @@
   <groupId>org.actframework</groupId>
   <artifactId>act-social-link</artifactId>
   <packaging>jar</packaging>
-  <version>0.5.0-SNAPSHOT</version>
+  <version>0.6.0-SNAPSHOT</version>
 
   <name>ACT Social Link</name>
   <description>Help act application to connect to social providers, e.g. facebook, linkedin etc</description>
@@ -43,7 +45,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <git.url>git@github.com:actframework/act-social-link.git</git.url>
-    <act.version>0.5.0-SNAPSHOT</act.version>
+    <act.version>0.6.0-SNAPSHOT</act.version>
   </properties>
 
   <parent>
