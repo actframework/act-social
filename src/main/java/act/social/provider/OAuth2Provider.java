@@ -6,7 +6,6 @@ import act.social.SocialProvider;
 import com.alibaba.fastjson.JSONObject;
 import okhttp3.Request;
 import org.osgl.$;
-import org.osgl.exception.UnexpectedException;
 import org.osgl.util.C;
 import org.osgl.util.E;
 import org.osgl.util.S;
@@ -106,7 +105,9 @@ public abstract class OAuth2Provider extends SocialProvider {
             for (String pair : pairs) {
                 String[] kv = pair.split("=");
                 if (kv.length != 2) {
-                    throw new UnexpectedException("Unexpected auth response");
+                    // github response might have scope=&... meaning there
+                    // is no scope. let's just ignore it
+                    continue;
                 }
                 String k = kv[0];
                 if ("access_token".equals(k)) {

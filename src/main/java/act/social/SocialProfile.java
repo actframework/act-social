@@ -2,8 +2,12 @@ package act.social;
 
 import act.event.ActEvent;
 import org.osgl.$;
+import org.osgl.util.C;
+import org.osgl.util.S;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A class representing a conected user and its authentication details.
@@ -67,6 +71,8 @@ public class SocialProfile implements Serializable {
      */
     private String secret;
 
+    private Map<String, Object> attributes = new HashMap<>();
+
     public SocialProfile() {}
 
     public SocialProfile(String userId, String provider) {
@@ -95,6 +101,28 @@ public class SocialProfile implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getFullName() {
+        S.Buffer buf = S.newBuffer();
+        if (S.notBlank(firstName)) {
+            buf.a(firstName);
+            if (S.notBlank(lastName)) {
+                buf.a(" ").append(lastName);
+            }
+        } else if (S.notBlank(lastName)) {
+            buf.append(lastName);
+        }
+        return buf.toString();
+    }
+
+    public void setFullName(String fullName) {
+        if (fullName.contains(" ")) {
+            setFirstName(S.beforeLast(fullName, " "));
+            setLastName(S.afterLast(fullName, " "));
+        } else {
+            setLastName(fullName);
+        }
     }
 
     public String getDisplayName() {
@@ -163,6 +191,22 @@ public class SocialProfile implements Serializable {
 
     public void setExpiration(long expiration) {
         this.expiration = expiration;
+    }
+
+    public void putAll(Map<String, Object> data) {
+        attributes.putAll(data);
+    }
+
+    public void put(String key, Object val) {
+        attributes.put(key, val);
+    }
+
+    public Map<String, Object> getAttributes() {
+        return C.newMap(attributes);
+    }
+
+    public <T> T get(String key) {
+        return (T) attributes.get(key);
     }
 
     public void fillProfile(SocialProvider provider) {

@@ -92,7 +92,10 @@ public abstract class SocialProvider {
         String sep = sb.toString().contains("?") ? "&" : "?";
         sb.append(sep).append("zz=0");
         for (Map.Entry<String, String> entry : args.entrySet()) {
-            sb.append("&").append(entry.getKey()).append("=").append(Codec.encodeUrl(entry.getValue()));
+            String key = entry.getKey(), val = entry.getValue();
+            if (null != val) {
+                sb.append("&").append(key).append("=").append(Codec.encodeUrl(val));
+            }
         }
         return sb;
     }
