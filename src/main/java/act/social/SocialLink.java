@@ -4,12 +4,10 @@ import act.app.ActionContext;
 import act.app.conf.AutoConfig;
 import act.controller.Controller;
 import act.event.EventBus;
-import com.sun.org.apache.bcel.internal.classfile.Code;
 import org.osgl.$;
 import org.osgl.http.H;
 import org.osgl.mvc.annotation.Action;
 import org.osgl.mvc.result.Result;
-import org.osgl.util.Codec;
 import org.osgl.util.Const;
 import org.osgl.util.S;
 
@@ -27,8 +25,7 @@ public class SocialLink extends Controller.Util {
             SocialProvider provider,
             String callback,
             String payload,
-            ActionContext context,
-            H.Flash flash
+            ActionContext context
     ) {
         if (null == callback) {
             callback = context.req().referrer();
