@@ -42,6 +42,16 @@ public class FacebookProvider extends OAuth2Provider {
 
     }
 
+    @Override
+    protected boolean accessTokenInJson() {
+        return true;
+    }
+
+    @Override
+    protected String expiresParamName() {
+        return "expires_in";
+    }
+
     private void updateAccessToken(SocialProfile user) {
         throw E.tbd();
     }
