@@ -42,11 +42,15 @@ public class SocialLink extends Controller.Util {
             String act_payload,
             EventBus eventBus
     ) {
-        provider.checkCsrfToken(state);
-        SocialProfile profile = provider.doAuth(code, act_callback, act_payload);
-        // todo handle exception
-        String payload = act_payload;
-        eventBus.trigger(profile.createFetchedEvent(payload));
+        try {
+            provider.checkCsrfToken(state);
+            SocialProfile profile = provider.doAuth(code, act_callback, act_payload);
+            // todo handle exception
+            String payload = act_payload;
+            eventBus.trigger(profile.createFetchedEvent(payload));
+        } catch (RuntimeException e) {
+            eventBus.trigger(new SocialLinkFailed());
+        }
         String originalCallback = act_callback;
         if (S.blank(originalCallback)) {
             originalCallback = LOGIN_REDIRECT.get();
