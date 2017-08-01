@@ -7,6 +7,7 @@ import act.event.EventBus;
 import org.osgl.$;
 import org.osgl.http.H;
 import org.osgl.mvc.annotation.Action;
+import org.osgl.mvc.annotation.GetAction;
 import org.osgl.mvc.result.Result;
 import org.osgl.util.Const;
 import org.osgl.util.S;
@@ -31,6 +32,18 @@ public class SocialLink extends Controller.Util {
             callback = context.req().referrer();
         }
         return redirect(provider.authUrl(callback, payload));
+    }
+
+    /**
+     * Returns the auth URL so in certain case the pure front end app (e.g. ionic) can fetch it
+     * and initiate redirect from the client side (to manipulate headers like User-Agent)
+     */
+    @GetAction("auth_link")
+    public String socialRedirectLink(SocialProvider provider, String callback, String payload, ActionContext context) {
+        if (null == callback) {
+            callback = context.req().referrer();
+        }
+        return provider.authUrl(callback, payload);
     }
 
     @Action(value = "callback", methods = {H.Method.GET, H.Method.POST})
