@@ -18,6 +18,9 @@
 ********************************************
 *            version history
 ********************************************
+0.8.2
+* handle social login cancel event
+
 0.8.0
   - Add GitHub provider
   - Update to act 1.0
@@ -49,7 +52,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <git.url>git@github.com:actframework/act-social-link.git</git.url>
-    <act.version>[1.0.1, 2.0.0)</act.version>
+    <act.version>1.4.6</act.version>
   </properties>
 
   <parent>

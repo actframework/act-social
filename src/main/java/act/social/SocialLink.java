@@ -61,6 +61,8 @@ public class SocialLink extends Controller.Util {
             // todo handle exception
             String payload = act_payload;
             eventBus.trigger(profile.createFetchedEvent(payload));
+        } catch (Result r) {
+            return r;
         } catch (RuntimeException e) {
             eventBus.trigger(new SocialLinkFailed());
         }
