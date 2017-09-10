@@ -5,6 +5,7 @@ import act.app.conf.AutoConfig;
 import act.controller.Controller;
 import act.event.EventBus;
 import org.osgl.$;
+import org.osgl.bootstrap.Version;
 import org.osgl.http.H;
 import org.osgl.mvc.annotation.Action;
 import org.osgl.mvc.annotation.GetAction;
@@ -15,6 +16,8 @@ import org.osgl.util.S;
 @Controller("social")
 @AutoConfig("social_link")
 public class SocialLink extends Controller.Util {
+
+    public static final Version VERSION = Version.of(SocialLink.class);
 
     public static final Const<String> LOGIN_REDIRECT = $.constant();
 
