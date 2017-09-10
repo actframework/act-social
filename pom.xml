@@ -21,7 +21,7 @@
   <groupId>org.actframework</groupId>
   <artifactId>act-social-link</artifactId>
   <packaging>jar</packaging>
-  <version>0.9.0</version>
+  <version>0.9.1-SNAPSHOT</version>
 
   <name>ACT Social Link</name>
   <description>Help act application to connect to social providers, e.g. facebook, linkedin etc</description>
