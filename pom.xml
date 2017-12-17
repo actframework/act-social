@@ -21,7 +21,7 @@
   <groupId>org.actframework</groupId>
   <artifactId>act-social-link</artifactId>
   <packaging>jar</packaging>
-  <version>0.9.1-SNAPSHOT</version>
+  <version>0.10.0-SNAPSHOT</version>
 
   <name>ACT Social Link</name>
   <description>Help act application to connect to social providers, e.g. facebook, linkedin etc</description>
@@ -59,9 +59,9 @@
     <markdown-doclet.version>1.4</markdown-doclet.version>
     <plexus-compiler-javac-errorprone.version>2.8.2</plexus-compiler-javac-errorprone.version>
 
-    <osgl-ut.version>1.0.0-BETA-4</osgl-ut.version>
+    <osgl-ut.version>1.0.1</osgl-ut.version>
 
-    <act.version>1.4.11</act.version>
+    <act.version>1.6.0-SNAPSHOT</act.version>
 
   </properties>
 

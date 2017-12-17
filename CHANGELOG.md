@@ -1,5 +1,8 @@
 # act-social-link CHANGE LOG
 
+0.10.0
+* update to act-1.5
+
 0.9.0
 * update to ACT 1.4.11
 * improve maven build process
