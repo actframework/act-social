@@ -48,7 +48,7 @@ public class GitHubProvider extends OAuth2Provider {
         }
 
         String url = config.getProfileUrl();
-        Map<String, String> params = C.map(authMethod.accessTokenParamName(), user.getToken());
+        Map<String, String> params = C.Map(authMethod.accessTokenParamName(), user.getToken());
         JSONObject json = readUrlAsJson(url, params,false);
         for (Map.Entry<String, Object> entry : json.entrySet()) {
             String key = entry.getKey();

@@ -1,5 +1,11 @@
 # act-social-link CHANGE LOG
 
+0.12.0
+* update to act-1.7
+
+0.11.0
+* update to act-1.6
+
 0.10.0
 * update to act-1.5
 

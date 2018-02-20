@@ -33,10 +33,10 @@ import org.osgl.logging.LogManager;
 import org.osgl.logging.Logger;
 import org.osgl.util.*;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.Map;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Base class for all itendity providers
@@ -76,7 +76,7 @@ public abstract class SocialProvider {
         this.id = id;
         this.authMethod = authMethod;
         this.config = Config.load(id);
-        this.callbackUrl = Act.app().router().reverseRoute("act.social.SocialLink.authCallback", C.<String, Object>map("provider", getId()), true);
+        this.callbackUrl = Act.app().router().reverseRoute("act.social.SocialLink.authCallback", C.<String, Object>Map("provider", getId()), true);
     }
 
     public String getId() {

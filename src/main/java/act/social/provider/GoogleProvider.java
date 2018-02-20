@@ -70,7 +70,7 @@ public class GoogleProvider extends OAuth2Provider {
         }
 
         String url = config.getProfileUrl();
-        Map<String, String> params = C.map(
+        Map<String, String> params = C.Map(
                 "fields", "emails/value,id,image/url,name(familyName,givenName)",
                 authMethod.accessTokenParamName(), user.getToken()
         );

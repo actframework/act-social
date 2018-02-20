@@ -46,7 +46,7 @@ public abstract class OAuth2Provider extends SocialProvider {
     }
 
     protected Map<String, String> authorizationParams(String callback, String payload) {
-        return C.map(
+        return C.Map(
                 authMethod.keyParamName(), config.getKey(),
                 authMethod.callBackUrlParamName(), callbackUrl(callback, payload),
                 authMethod.scopeParamName(), config.getScope(),
