@@ -1,5 +1,8 @@
 # act-social-link CHANGE LOG
 
+0.12.2 - 02/Apr/2018
+* update act to 1.8.5
+
 0.12.1
 * update act to 1.8.2
 
