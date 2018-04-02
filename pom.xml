@@ -20,7 +20,7 @@
 
   <artifactId>act-social-link</artifactId>
   <packaging>jar</packaging>
-  <version>0.12.2-SNAPSHOT</version>
+  <version>0.12.2</version>
 
   <name>ACT Social Link</name>
   <description>Help act application to connect to social providers, e.g. facebook, linkedin etc</description>
