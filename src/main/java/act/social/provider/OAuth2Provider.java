@@ -144,7 +144,6 @@ public abstract class OAuth2Provider extends SocialProvider {
         SocialProfile profile = new SocialProfile();
         profile.setToken(accessToken);
         profile.setExpiration(expires);
-        profile.setServiceConfig(config);
         fillProfile(profile);
         return profile;
     }

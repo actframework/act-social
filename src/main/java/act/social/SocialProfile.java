@@ -233,15 +233,21 @@ public class SocialProfile implements Serializable {
         provider.fillProfile(this);
     }
 
-    public Fetched createFetchedEvent(String payload) {
-        return new Fetched(this, payload);
+    public Fetched createFetchedEvent(String payload, String provider) {
+        return new Fetched(this, payload, provider);
     }
 
     public static class Fetched extends ActEvent<SocialProfile> {
         private String payload;
-        public Fetched(SocialProfile source, String payload) {
+        private String provider;
+        public Fetched(SocialProfile source, String payload,String provider) {
             super(source);
             this.payload = payload;
+            this.provider = provider;
+        }
+
+        public String provider() {
+            return provider;
         }
 
         public String payload() {

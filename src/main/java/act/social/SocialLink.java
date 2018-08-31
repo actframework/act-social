@@ -83,7 +83,7 @@ public class SocialLink extends Controller.Util {
             SocialProfile profile = provider.doAuth(code, act_callback, act_payload);
             // todo handle exception
             String payload = act_payload;
-            eventBus.trigger(profile.createFetchedEvent(payload));
+            eventBus.trigger(profile.createFetchedEvent(payload, provider.id));
         } catch (Result r) {
             return r;
         } catch (RuntimeException e) {
