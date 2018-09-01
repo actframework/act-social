@@ -23,12 +23,11 @@ package act.social.provider;
 import act.social.AuthenticationMethod;
 import act.social.SocialProfile;
 import act.social.SocialProvider;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import okhttp3.Request;
 import org.osgl.$;
-import org.osgl.util.C;
-import org.osgl.util.E;
-import org.osgl.util.S;
+import org.osgl.util.*;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -48,19 +47,21 @@ public abstract class OAuth2Provider extends SocialProvider {
     protected Map<String, String> authorizationParams(String callback, String payload) {
         return C.Map(
                 authMethod.keyParamName(), config.getKey(),
-                authMethod.callBackUrlParamName(), callbackUrl(callback, payload),
+                authMethod.callBackUrlParamName(), callbackUrl(),
                 authMethod.scopeParamName(), config.getScope(),
                 authMethod.csrfTokenParamName(), createCsrfToken(),
+                "state", state(callback, payload),
                 "response_type", "code"
         );
     }
 
-    protected Map<String, String> exchangeAccessTokenParams(String code, String act_callback, String act_payload) {
+    protected Map<String, String> exchangeAccessTokenParams(String code, String callback, String payload) {
         return C.newMap(
                 authMethod.keyParamName(), config.getKey(),
                 authMethod.secretParamName(), config.getSecret(),
                 authMethod.authCodeParamName(), code,
-                authMethod.callBackUrlParamName(), callbackUrl(act_callback, act_payload),
+                authMethod.callBackUrlParamName(), callbackUrl(),
+                "state", state(callback, payload),
                 "grant_type", "authorization_code"
         );
     }
@@ -154,5 +155,16 @@ public abstract class OAuth2Provider extends SocialProvider {
 
     private void updateAccessToken(SocialProfile user) {
         throw E.tbd();
+    }
+
+    private String state(String callback, String payload) {
+        JSONObject state = new JSONObject();
+        if (S.notBlank(callback)) {
+            state.put("act_callback", callback);
+        }
+        if (S.notBlank(payload)) {
+            state.put("act_payload", callback);
+        }
+        return Codec.encodeUrlSafeBase64(JSON.toJSONBytes(state));
     }
 }

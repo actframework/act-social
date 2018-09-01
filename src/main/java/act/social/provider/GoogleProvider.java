@@ -37,8 +37,8 @@ public class GoogleProvider extends OAuth2Provider {
     }
 
     @Override
-    protected Map<String, String> exchangeAccessTokenParams(String code, String act_callback, String act_payload) {
-        Map<String, String> params = super.exchangeAccessTokenParams(code, act_callback, act_payload);
+    protected Map<String, String> exchangeAccessTokenParams(String code, String callback, String payload) {
+        Map<String, String> params = super.exchangeAccessTokenParams(code, callback, payload);
         params.put("grant_type", "authorization_code");
         return params;
     }

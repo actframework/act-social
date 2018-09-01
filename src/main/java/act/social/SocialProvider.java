@@ -135,17 +135,6 @@ public abstract class SocialProvider {
      */
     public abstract String authUrl(String callback, String payload);
 
-    protected String callbackUrl(String callback, String payload) {
-        StringBuilder sb = new StringBuilder(callbackUrl);
-        if (S.notBlank(callback)) {
-            sb.append("&act_callback=").append(Codec.encodeUrl(callback));
-        }
-        if (S.notBlank(payload)) {
-            sb.append("&act_payload=").append(Codec.encodeUrl(payload));
-        }
-        return sb.toString();
-    }
-
     protected String callbackUrl() {
         return callbackUrl;
     }

@@ -24,13 +24,14 @@ import act.app.ActionContext;
 import act.app.conf.AutoConfig;
 import act.controller.Controller;
 import act.event.EventBus;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.osgl.$;
 import org.osgl.http.H;
 import org.osgl.mvc.annotation.Action;
 import org.osgl.mvc.annotation.GetAction;
 import org.osgl.mvc.result.Result;
-import org.osgl.util.Const;
-import org.osgl.util.S;
+import org.osgl.util.*;
 import osgl.version.Version;
 
 @Controller("social")
@@ -74,16 +75,21 @@ public class SocialLink extends Controller.Util {
             SocialProvider provider,
             String code,
             String state,
-            String act_callback,
-            String act_payload,
             EventBus eventBus
     ) {
+        String act_callback = null;
+        String act_payload = null;
+        if (S.notBlank(state)) {
+            byte[] jsonStr = Codec.decodeUrlSafeBase64(state);
+            JSONObject json = JSON.parseObject(jsonStr, JSONObject.class);
+            act_callback = json.getString("act_callback");
+            act_payload = json.getString("act_payload");
+        }
         try {
             provider.checkCsrfToken(state);
             SocialProfile profile = provider.doAuth(code, act_callback, act_payload);
             // todo handle exception
-            String payload = act_payload;
-            eventBus.trigger(profile.createFetchedEvent(payload, provider.id));
+            eventBus.trigger(profile.createFetchedEvent(act_payload, provider.getId()));
         } catch (Result r) {
             return r;
         } catch (RuntimeException e) {
