@@ -1,6 +1,7 @@
 # act-social-link CHANGE LOG
 
-0.12.5
+0.12.5 - 30/Oct/2018
+* update act-1.8.8
 * Fix issue: doAuth shall set service config into `SocialProfile` returned #2
 * oauth callback URL cannot be altered #3
 
