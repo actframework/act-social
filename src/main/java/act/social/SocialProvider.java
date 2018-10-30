@@ -184,7 +184,6 @@ public abstract class SocialProvider {
 
     @Singleton
     public static class Manager {
-        @Inject
         @TypeOf
         @MapKey("id")
         private Map<String, SocialProvider> providers;
