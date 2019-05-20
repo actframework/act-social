@@ -21,6 +21,7 @@ package act.social;
  */
 
 import act.Act;
+import act.util.LogSupport;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import okhttp3.FormBody;
@@ -43,9 +44,7 @@ import javax.inject.Singleton;
  *
  * The code is modified from https://github.com/jaliss/securesocial
  */
-public abstract class SocialProvider {
-
-    protected final Logger logger = LogManager.get(SocialProvider.class);
+public abstract class SocialProvider extends LogSupport {
 
     /**
      * The provider ID.

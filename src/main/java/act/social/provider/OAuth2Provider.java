@@ -35,7 +35,6 @@ import java.util.Map;
 
 public abstract class OAuth2Provider extends SocialProvider {
 
-
     public OAuth2Provider(String id) {
         super(id, AuthenticationMethod.OAUTH2);
     }
@@ -118,9 +117,15 @@ public abstract class OAuth2Provider extends SocialProvider {
 
     @Override
     public SocialProfile doAuth(String code, String act_callback, String act_payload) {
+        if (isTraceEnabled()) {
+            trace("Doing auth");
+        }
         String accessToken = null;
         long expires = -1;
         if (!accessTokenInJson()) {
+            if (isTraceEnabled()) {
+                trace("!accessTokenInJson()");
+            }
             String result = readUrlAsString(config.getAccessTokenUrl(), exchangeAccessTokenParams(code, act_callback, act_payload), postToAccessTokenUrl());
             String[] pairs = result.split("&");
             for (String pair : pairs) {
@@ -138,6 +143,9 @@ public abstract class OAuth2Provider extends SocialProvider {
                 }
             }
         } else {
+            if (isTraceEnabled()) {
+                trace("accessTokenInJson()");
+            }
             JSONObject result = readUrlAsJson(config.getAccessTokenUrl(), exchangeAccessTokenParams(code, act_callback, act_payload), postToAccessTokenUrl());
             accessToken = result.getString("access_token");
             expires = parseExpires(result.getString(expiresParamName()));

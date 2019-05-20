@@ -1,5 +1,9 @@
 # act-social-link CHANGE LOG
 
+0.12.6 - 20/May/2018
+* update to act-1.8.22
+* add log messages
+
 0.12.5 - 30/Oct/2018
 * update act-1.8.8
 * Fix issue: doAuth shall set service config into `SocialProfile` returned #2

@@ -81,6 +81,9 @@ public class GoogleProvider extends OAuth2Provider {
         user.setLastName(name.getString("familyName"));
         user.setEmail(json.getJSONArray("emails").getJSONObject(0).getString("value"));
         user.setAvatarUrl(json.getJSONObject("image").getString("url"));
+        if (isTraceEnabled()) {
+            trace("Done GoogleProvider.fillProfile");
+        }
     }
 
     private void updateAccessToken(SocialProfile user) {
