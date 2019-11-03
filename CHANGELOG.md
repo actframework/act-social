@@ -1,5 +1,8 @@
 # act-social-link CHANGE LOG
 
+0.13.0 - 03/Nov/2019
+* update to act-1.8.29
+
 0.12.6 - 20/May/2018
 * update to act-1.8.22
 * add log messages
