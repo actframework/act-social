@@ -109,11 +109,17 @@ public abstract class SocialProvider extends LogSupport {
 
     protected static StringBuilder appendParams(StringBuilder sb, Map<String, String> args) {
         String sep = sb.toString().contains("?") ? "&" : "?";
-        sb.append(sep).append("zz=0");
+        sb.append(sep);
+        boolean first = true;
         for (Map.Entry<String, String> entry : args.entrySet()) {
             String key = entry.getKey(), val = entry.getValue();
             if (null != val) {
-                sb.append("&").append(key).append("=").append(Codec.encodeUrl(val));
+                if (!first) {
+                    sb.append("&");
+                } else {
+                    first = false;
+                }
+                sb.append(key).append("=").append(Codec.encodeUrl(val));
             }
         }
         return sb;

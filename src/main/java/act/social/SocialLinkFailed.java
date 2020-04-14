@@ -22,5 +22,9 @@ package act.social;
 
 import act.event.ActEvent;
 
-public class SocialLinkFailed extends ActEvent {
+public class SocialLinkFailed extends ActEvent<RuntimeException> {
+
+    public SocialLinkFailed(RuntimeException cause) {
+        super(cause);
+    }
 }

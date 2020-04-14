@@ -1,4 +1,4 @@
-package act.social;
+    package act.social;
 
 /*-
  * #%L
@@ -24,6 +24,9 @@ import act.app.ActionContext;
 import act.app.conf.AutoConfig;
 import act.controller.Controller;
 import act.event.EventBus;
+import act.util.LogSupport;
+import act.view.ActForbidden;
+import act.view.ActUnauthorized;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.osgl.$;
@@ -34,9 +37,11 @@ import org.osgl.mvc.result.Result;
 import org.osgl.util.*;
 import osgl.version.Version;
 
+import static act.controller.Controller.Util.redirect;
+
 @Controller("social")
 @AutoConfig("social_link")
-public class SocialLink extends Controller.Util {
+public class SocialLink extends LogSupport {
 
     public static final Version VERSION = Version.of(SocialLink.class);
 
@@ -52,10 +57,7 @@ public class SocialLink extends Controller.Util {
             String payload,
             ActionContext context
     ) {
-        if (null == callback) {
-            callback = context.req().referrer();
-        }
-        return redirect(provider.authUrl(callback, payload));
+        return redirect(socialRedirectLink(provider, callback, payload, context));
     }
 
     /**
@@ -67,7 +69,12 @@ public class SocialLink extends Controller.Util {
         if (null == callback) {
             callback = context.req().referrer();
         }
-        return provider.authUrl(callback, payload);
+        String redirectUrl = provider.authUrl(callback, payload);
+        if (isDebugEnabled()) {
+            debug("secure: %s\n\tprovider: %s\n\tcallback: %s\n\tpayload: %s\n\tredirect to: %s",
+                    context.req().secure(), provider, callback, payload, redirectUrl);
+        }
+        return redirectUrl;
     }
 
     @Action(value = "callback", methods = {H.Method.GET, H.Method.POST})
@@ -77,6 +84,9 @@ public class SocialLink extends Controller.Util {
             String state,
             EventBus eventBus
     ) {
+        if (isDebugEnabled()) {
+            debug("callback >>>");
+        }
         String act_callback = null;
         String act_payload = null;
         if (S.notBlank(state)) {
@@ -86,14 +96,25 @@ public class SocialLink extends Controller.Util {
             act_payload = json.getString("act_payload");
         }
         try {
+            if (isDebugEnabled()) {
+                debug("checking CSRF token...");
+            }
             provider.checkCsrfToken(state);
             SocialProfile profile = provider.doAuth(code, act_callback, act_payload);
+            if (isDebugEnabled()) {
+                debug("profile fetched: %s", profile);
+                debug("triggering event");
+            }
             // todo handle exception
             eventBus.trigger(profile.createFetchedEvent(act_payload, provider.getId()));
+            if (isDebugEnabled()) {
+                debug("Fetch event triggered");
+            }
         } catch (Result r) {
             return r;
         } catch (RuntimeException e) {
-            eventBus.trigger(new SocialLinkFailed());
+            eventBus.trigger(new SocialLinkFailed(e));
+            throw ActForbidden.create(e);
         }
         String originalCallback = act_callback;
         if (S.blank(originalCallback)) {

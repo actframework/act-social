@@ -22,6 +22,7 @@ package act.social.provider;
 
 import act.social.SocialId;
 import act.social.SocialProfile;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.osgl.$;
 import org.osgl.util.C;
@@ -71,16 +72,28 @@ public class GoogleProvider extends OAuth2Provider {
 
         String url = config.getProfileUrl();
         Map<String, String> params = C.Map(
-                "fields", "emails/value,id,image/url,name(familyName,givenName)",
+                "personFields", "emailAddresses,names,photos",
                 authMethod.accessTokenParamName(), user.getToken()
         );
         JSONObject json = readUrlAsJson(url, params, false);
         user.setId(new SocialId(json.getString("id"), this.getId()));
-        JSONObject name = json.getJSONObject("name");
-        user.setFirstName(name.getString("givenName"));
-        user.setLastName(name.getString("familyName"));
-        user.setEmail(json.getJSONArray("emails").getJSONObject(0).getString("value"));
-        user.setAvatarUrl(json.getJSONObject("image").getString("url"));
+        JSONArray emails = json.getJSONArray("emailAddresses");
+        if (!emails.isEmpty()) {
+            JSONObject emailObject = emails.getJSONObject(0);
+            user.setEmail(emailObject.getString("value"));
+        }
+        JSONArray names = json.getJSONArray("names");
+        if (!names.isEmpty()) {
+            JSONObject nameObject = names.getJSONObject(0);
+            user.setDisplayName(nameObject.getString("displayName"));
+            user.setFirstName(nameObject.getString("givenName"));
+            user.setLastName(nameObject.getString("familyName"));
+        }
+        JSONArray photos = json.getJSONArray("photos");
+        if (!photos.isEmpty()) {
+            JSONObject photoObject = photos.getJSONObject(0);
+            user.setAvatarUrl(photoObject.getString("url"));
+        }
         if (isTraceEnabled()) {
             trace("Done GoogleProvider.fillProfile");
         }
