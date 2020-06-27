@@ -1,7 +1,7 @@
 # act-social-link CHANGE LOG
 
 0.14.0
-* update to act-1.8.32
+* update to act-1.8.33b
 * Google Social Provider - migrate profile fetch to the new people API #5
 * It shall respond 403 if error encountered authenticate social provider or fetching profile #4 
 
